@@ -1,11 +1,13 @@
 console.log("Import logic.js worked")
 
-var map = L.map("mapid", {center:[40.7, -94.5], zoom:4});
+var map = L.map("map", { center: [40.7, -94.5], zoom: 4 });
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
 }).addTo(map);
+
+console.log("Loading map")
 
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -17,3 +19,5 @@ let streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{
 });
 // Then we add our 'graymap' tile layer to the map.
 streets.addTo(map);
+
+console.log("Map Loading Complete")
