@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Earthquake Map</title>
+
+    <!-- My Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+    <!-- script to make Leaflet work -->
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""> </script>
+    
+    <!-- webpage CSS -->
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+</head>
+
+<body>
+
+    <!-- Div that holds the map-->
+    <div id="map"> </div>
+    
+    <!--detect user interaction with D3.js-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- Mapbox API Key-->
+    <script type="text/javascript" src="static/js/config.js"></script>
+    <!-- Javascript to make everything work-->
+    <script type="text/javascript" src="static/js/logic.js"></script>
+    
+</body>
+</html>
