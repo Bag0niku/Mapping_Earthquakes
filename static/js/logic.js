@@ -81,15 +81,14 @@ function createMap() {
 
     // Create the layer for the earthquakes
     let earthquakes = new L.layerGroup();
-    let overlays = {
-        Earthquakes: earthquakes
-    };
-
-
-
-
-    
+    let dangerquakes = new L.layerGroup();
     createMapMarkers(earthquakes, usgsURL);
+    createMapMarkers(dangerquakes, usgs4URL);
+    let overlays = {
+        Earthquakes: earthquakes,
+        "Major Earthquakes": dangerquakes
+    };
+    
 
     // Create the map instance
     let map = L.map("map", { center: [40.7, -94.5], zoom: 4, layers: [streetmap, earthquakes] });  
