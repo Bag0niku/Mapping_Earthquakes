@@ -46,11 +46,13 @@ function createMapMarkers(queryURL) {
     d3.json(usgsURL).then( data => {
         let earthquakes = data.features
         earthquakes.forEach((quake) => {
-            let lat = quake.geometry.coordinates[0];
-            let lon = quake.geometry.coordinates[1];
+            let lon = quake.geometry.coordinates[0];
+            let lat = quake.geometry.coordinates[1];
             let depth = quake.geometry.coordinates[2];
             let mag = quake.properties.mag;
-            L.marker([lat,lon]).addTo(bigmap);
+            let mapPoint = L.marker([lat,lon]);
+            mapPoint.bindPopup("Latitude: "+ lat+ "<br> Longitude: " +lon + "<br> Magnitude: " +mag + "<br> Depth: " +depth+"km" );
+            mapPoint.addTo(bigmap);
         });
     }
 
@@ -59,6 +61,7 @@ function createMapMarkers(queryURL) {
 }
 
 var bigmap = createMap();
+createMapMarkers(usgsURL);
 
 var LAcircle = new L.circle(
     [34.0522, -118.2437], 
@@ -67,16 +70,3 @@ LAcircle.addTo(bigmap);
 
 
 console.log("Map Loading Complete")
-
-
-d3.json(usgsURL).then( data => {
-    let earthquakes = data.features
-    earthquakes.forEach((quake) => {
-        let lon = quake.geometry.coordinates[0];
-        let lat = quake.geometry.coordinates[1];
-        let depth = quake.geometry.coordinates[2];
-        let mag = quake.properties.mag;
-        L.marker([lat,lon]).addTo(bigmap);
-        console.log(lat, lon, depth, mag);
-    });
-});
