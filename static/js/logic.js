@@ -1,8 +1,12 @@
 console.log("Import logic.js worked")
 
-
 console.log("Loading map")
 
+// Source of the earthquake data
+const usgsURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+
+
+// Create the map that will be viewed
 function createMap() {
     // streetview tile layer for the map
     const streetmap = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -33,12 +37,46 @@ function createMap() {
 
     // add baseMap to control the layer options
     L.control.layers(baseMaps).addTo(map)
+    return map
 
 }
 
-var mymap = createMap();
 
-let LAcircle = L.circleMarker([34.0522, -118.2437], {radius: 100, color: "#99ff66", fillcolor: "#99ff66" }).addTo(mymap);
+function createMapMarkers(queryURL) {
+    d3.json(usgsURL).then( data => {
+        let earthquakes = data.features
+        earthquakes.forEach((quake) => {
+            let lat = quake.geometry.coordinates[0];
+            let lon = quake.geometry.coordinates[1];
+            let depth = quake.geometry.coordinates[2];
+            let mag = quake.properties.mag;
+            L.marker([lat,lon]).addTo(bigmap);
+        });
+    }
+
+    );
+
+}
+
+var bigmap = createMap();
+
+var LAcircle = new L.circle(
+    [34.0522, -118.2437], 
+    {radius: 1000, color: "#99ff66", fillcolor: "#99ff66" });
+LAcircle.addTo(bigmap);
 
 
 console.log("Map Loading Complete")
+
+
+d3.json(usgsURL).then( data => {
+    let earthquakes = data.features
+    earthquakes.forEach((quake) => {
+        let lon = quake.geometry.coordinates[0];
+        let lat = quake.geometry.coordinates[1];
+        let depth = quake.geometry.coordinates[2];
+        let mag = quake.properties.mag;
+        L.marker([lat,lon]).addTo(bigmap);
+        console.log(lat, lon, depth, mag);
+    });
+});
