@@ -42,6 +42,30 @@ function createMap() {
 }
 
 
+function getColor(mag) {
+    switch (true) {
+        //  Danger Level: Maximum Danger Red #FF0000
+        case mag>8: 
+            return "#FF0000"
+
+        //  Danger level: Dangerous Orange #FF8000
+        case mag>6: 
+            return "#FF8000";
+        
+        //  Danger level: Warning Yellow #FFFF00
+        case mag>4: 
+            return "#FFFF00";
+        
+        //  Danger level: Caution Green #00FF00
+        case mag>2:
+            return "#00FF00";
+        
+        //  Danger level: No Need to Worry Blue #0000FF
+        default: 
+            return "#0000FF";        
+    }
+}
+
 function createMapMarkers(queryURL) {
     d3.json(usgsURL).then( data => {
         let earthquakes = data.features
@@ -50,7 +74,7 @@ function createMapMarkers(queryURL) {
             let lat = quake.geometry.coordinates[1];
             let depth = quake.geometry.coordinates[2];
             let mag = quake.properties.mag;
-            let mapPoint = L.marker([lat,lon]);
+            let mapPoint = L.circleMarker([lat,lon],{radius: mag, color: getColor(mag), fillcolor: "#99ff66" });
             mapPoint.bindPopup("Latitude: "+ lat+ "<br> Longitude: " +lon + "<br> Magnitude: " +mag + "<br> Depth: " +depth+"km" );
             mapPoint.addTo(bigmap);
         });
@@ -60,13 +84,9 @@ function createMapMarkers(queryURL) {
 
 }
 
+
+
 var bigmap = createMap();
 createMapMarkers(usgsURL);
-
-var LAcircle = new L.circle(
-    [34.0522, -118.2437], 
-    {radius: 1000, color: "#99ff66", fillcolor: "#99ff66" });
-LAcircle.addTo(bigmap);
-
 
 console.log("Map Loading Complete")
