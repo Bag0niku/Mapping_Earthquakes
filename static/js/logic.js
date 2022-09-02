@@ -4,7 +4,54 @@ console.log("Loading map")
 
 // Source of the earthquake data
 const usgsURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+const usgs4URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"
 
+function getColor(mag) {
+    switch (true) {
+        //  Danger Level: Maximum Danger Red #FF0000
+        case mag>8: 
+            return "#FF0000"
+
+        //  Danger level: Dangerous Orange #FF8000
+        case mag>6: 
+            return "#FF8000";
+        
+        //  Danger level: Warning Yellow #FFFF00
+        case mag>4: 
+            return "#FFFF00";
+        
+        //  Danger level: Caution Green #00FF00
+        case mag>2:
+            return "#00FF00";
+        
+        //  Danger level: No Need to Worry Blue #0000FF
+        default: 
+            return "#0000FF";        
+    }
+}
+
+
+function createMapMarkers(layer, queryURL) {
+    // retrieve the earthquake information from the url
+    d3.json(queryURL).then( data => {
+        // save the relevent data and add it to the layer.
+        let eQuakes = data.features;
+
+        L.geoJSON(eQuakes, {pointToLayer: function(feature, latlng) {
+            // console.log(feature);
+            let lon = feature.geometry.coordinates[0];
+            let lat = feature.geometry.coordinates[1];
+            let depth = feature.geometry.coordinates[2];
+            let mag = feature.properties.mag;
+            let mapPoint = L.circle(latlng,{radius: depth*100, color: getColor(mag), fillcolor: "#99ff66" });
+            mapPoint.bindPopup("Latitude: "+ lat+ "<br> Longitude: " +lon + "<br> Magnitude: " +mag + "<br> Depth: " +depth+"km" );
+            return mapPoint
+        }}).addTo(layer);
+    }
+
+    );
+
+}
 
 // Create the map that will be viewed
 function createMap() {
@@ -32,61 +79,33 @@ function createMap() {
         Dark: darkmap,
     };
 
+    // Create the layer for the earthquakes
+    let earthquakes = new L.layerGroup();
+    let overlays = {
+        Earthquakes: earthquakes
+    };
+
+
+
+
+    
+    createMapMarkers(earthquakes, usgsURL);
+
     // Create the map instance
-    let map = L.map("map", { center: [40.7, -94.5], zoom: 4, layers: [streetmap] });  
+    let map = L.map("map", { center: [40.7, -94.5], zoom: 4, layers: [streetmap, earthquakes] });  
 
     // add baseMap to control the layer options
-    L.control.layers(baseMaps).addTo(map)
+    L.control.layers(baseMaps, overlays).addTo(map)
+
     return map
 
 }
 
 
-function getColor(mag) {
-    switch (true) {
-        //  Danger Level: Maximum Danger Red #FF0000
-        case mag>8: 
-            return "#FF0000"
 
-        //  Danger level: Dangerous Orange #FF8000
-        case mag>6: 
-            return "#FF8000";
-        
-        //  Danger level: Warning Yellow #FFFF00
-        case mag>4: 
-            return "#FFFF00";
-        
-        //  Danger level: Caution Green #00FF00
-        case mag>2:
-            return "#00FF00";
-        
-        //  Danger level: No Need to Worry Blue #0000FF
-        default: 
-            return "#0000FF";        
-    }
-}
-
-function createMapMarkers(queryURL) {
-    d3.json(usgsURL).then( data => {
-        let earthquakes = data.features
-        earthquakes.forEach((quake) => {
-            let lon = quake.geometry.coordinates[0];
-            let lat = quake.geometry.coordinates[1];
-            let depth = quake.geometry.coordinates[2];
-            let mag = quake.properties.mag;
-            let mapPoint = L.circleMarker([lat,lon],{radius: mag, color: getColor(mag), fillcolor: "#99ff66" });
-            mapPoint.bindPopup("Latitude: "+ lat+ "<br> Longitude: " +lon + "<br> Magnitude: " +mag + "<br> Depth: " +depth+"km" );
-            mapPoint.addTo(bigmap);
-        });
-    }
-
-    );
-
-}
 
 
 
 var bigmap = createMap();
-createMapMarkers(usgsURL);
 
 console.log("Map Loading Complete")
