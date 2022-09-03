@@ -34,7 +34,7 @@ function getRadius(magnitude) {if (magnitude < 1) {return 10} else {return magni
 
 function getColor(magnitude) {
     switch (true) {
-        //  Danger Level: Maximum Danger Red #FF0000
+        //  Danger Level: Serious Danger Red #FF0000
         case magnitude>5: 
             return "#FF0000"
 
@@ -91,6 +91,7 @@ function createMap() {
         accessToken: API_KEY
     });
     
+    // Topographical tile layer for the map
     const outdoor = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
@@ -105,14 +106,15 @@ function createMap() {
         id: 'mapbox/dark-v10',
         accessToken: API_KEY
     });
-
+    
+    // Satellite view tile layer option for the map
     let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
 	maxZoom: 18,
 	accessToken: API_KEY
     });
   
-    // combined the layers into one variable
+    // combine the map layers into one variable for map creation
     const baseMaps = {
         Street: streetmap,
         Dark: darkmap,
@@ -157,7 +159,39 @@ function createMap() {
 }
 
 
-
+// Create the map
 var bigmap = createMap();
 
-console.log("Map Loading Complete")
+// Create the Legend object
+let legend = L.control({
+    position: "bottomright"
+  });
+
+// Customize the Legend Object
+legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+  
+    const magnitudes = [0, 2, 3, 4, 5];
+    const colors = [
+      "#0000FF",
+      "#00FF00",
+      "#FFFF00",
+      "#FF8000",
+      "#FF0000"
+    ];
+  
+  // Looping through intervals to generate a label with a colored square for each interval.
+    for (var i = 0; i < magnitudes.length; i++) {
+        div.innerHTML +=
+        "<i style='background: " + colors[i] + "'></i> " +
+        magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
+      }
+      return div;
+    };
+  
+    // Add the legend to the map.
+    legend.addTo(bigmap);
+  
+  console.log("Map Loading Complete")
+
+
