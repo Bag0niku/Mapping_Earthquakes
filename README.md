@@ -14,3 +14,11 @@ The purpose of this project is to visually show the differences between the magn
 
 ### Tasks
 To complete this project, use a URL for GeoJSON earthquake data from the USGS website and retrieve geographical coordinates and the magnitudes of earthquakes for the last seven days. Then add the data to an interactive map.
+- I chose to include options for the following: 
+    - All Earthquakes and their locations in the last hour, day, or week.
+    - Major earthquakes from the last week or 30 days. 
+    - The boundries of the Tectonic Plates (the purple lines).
+    - The color and radius of the circle marker is determined by the magnitude of the earthquake.
+        
+# Preview
+![](/Preview.png)
